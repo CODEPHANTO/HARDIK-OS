@@ -1,0 +1,17 @@
+{
+  "name": "HARDIK OS",
+  "short_name": "HARDIK OS",
+  "description": "My Personal Control Center",
+  "start_url": "./Dashboard.html",
+  "display": "standalone",
+  "background_color": "#050b08",
+  "theme_color": "#00ff80",
+  "orientation": "portrait",
+"icons": [
+  {
+    "src": "./icon.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }
+]
+}

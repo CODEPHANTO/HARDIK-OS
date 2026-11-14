@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HARDIK OS 2.0</title>
+<link rel="manifest" href="manifest.json">
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ padding:20px;
+ background:#050b08;
+ color:#00ff80;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:20px 0;
+ border-bottom:1px solid #00ff8055;
+}
+header h1{
+ font-size:30px;
+ text-shadow:0 0 12px #00ff80;
+}
+.subtitle{color:#9ab5a5}
+.box{
+ background:#102018;
+ border:1px solid #00ff8055;
+ border-radius:12px;
+ padding:18px;
+ margin:15px 0;
+}
+h2{font-size:20px}
+input,textarea{
+ width:100%;
+ padding:13px;
+ margin:8px 0;
+ border:1px solid #00ff80;
+ border-radius:8px;
+ background:#07150e;
+ color:white;
+ font-size:16px;
+}
+button{
+ padding:12px 16px;
+ border:0;
+ border-radius:7px;
+ background:#00ff80;
+ color:black;
+ font-weight:bold;
+ margin:5px 0;
+}
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+}
+.card{
+ background:#102018;
+ border:1px solid #00ff8055;
+ border-radius:12px;
+ padding:20px 8px;
+ text-align:center;
+}
+.card span{font-size:28px}
+.card h3{font-size:14px}
+.item{
+ padding:12px;
+ margin:8px 0;
+ background:#07150e;
+ border-radius:8px;
+ color:white;
+}
+footer{
+ text-align:center;
+ color:#789487;
+ margin:30px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>⚡ HARDIK OS 2.0</h1>
+<p class="subtitle">MY PERSONAL CONTROL CENTER</p>
+</header>
+
+<div class="box">
+<h2>🟢 SYSTEM ONLINE</h2>
+<p>Welcome back, Hardik!</p>
+<p id="date"></p>
+</div>
+
+<h2>MY WORKSPACE</h2>
+
+<div class="grid">
+<div class="card" onclick="openAI()">
+    <span>🤖</span>
+    <h3>AI ASSISTANT</h3>
+</div>
+<div class="card"><span>💻</span><h3>PROGRAMMING</h3></div>
+<div class="card"><span>🔐</span><h3>CYBER SECURITY</h3></div>
+<div class="card"><span>🤖</span><h3>AI & ROBOTICS</h3></div>
+<div class="card"><span>📝</span><h3>MY NOTES</h3></div>
+<div class="card"><span>📅</span><h3>DAILY TASKS</h3></div>
+<div class="card"><span>🌐</span><h3>WEBSITES</h3></div>
+<div class="card"><span>⚙️</span><h3>SETTINGS</h3></div>
+</div>
+
+<div class="box">
+<h2>📝 PERSONAL NOTES</h2>
+<textarea id="notes" rows="5"
+placeholder="Write your ideas..."></textarea>
+<button onclick="saveNotes()">SAVE NOTES</button>
+</div>
+
+<div class="box">
+<h2>📅 DAILY TASKS</h2>
+<input id="task" placeholder="Enter your task">
+<button onclick="addTask()">ADD TASK</button>
+<div id="taskList"></div>
+</div>
+
+<div class="box">
+<h2>🌐 MY WEBSITES</h2>
+<input id="siteName" placeholder="Website name">
+<input id="siteLink" placeholder="Website URL (https://...)">
+<button onclick="addSite()">ADD WEBSITE</button>
+<div id="siteList"></div>
+</div>
+
+<footer>
+<div class="box">
+<h2>📚 MY STUDY MANAGER</h2>
+
+<input id="subjectName" placeholder="Enter Subject Name">
+
+<button onclick="addSubject()">ADD SUBJECT</button>
+
+<div id="subjectList"></div>
+
+<hr>
+
+<h3>📝 MY STUDY NOTES</h3>
+
+<input id="chapterName" placeholder="Chapter Name">
+
+<textarea id="studyNotes" rows="5"
+placeholder="Write your study notes..."></textarea>
+
+<button onclick="saveStudyNotes()">SAVE NOTES</button>
+
+<div id="savedNotes"></div>
+</div><div class="box">
+<h2>📁 MY FILE MANAGER</h2>
+
+<p>Select files from your mobile:</p>
+
+<input type="file" id="myFiles" multiple
+accept=".pdf,image/*,.txt,.doc,.docx">
+
+<div id="fileList"></div>
+
+</div> HARDIK OS 2.0<br>
+BUILT FOR MY FUTURE 🚀
+</footer>
+
+<script>
+
+document.getElementById("date").textContent =
+"Today: " + new Date().toDateString();
+
+let notes = document.getElementById("notes");
+notes.value = localStorage.getItem("hardikNotes2") || "";
+
+function saveNotes(){
+ localStorage.setItem("hardikNotes2",notes.value);
+ alert("Notes Saved!");
+}
+
+let tasks = JSON.parse(localStorage.getItem("tasks2") || "[]");
+
+function showTasks(){
+ let list=document.getElementById("taskList");
+ list.innerHTML="";
+
+ tasks.forEach(function(task,i){
+  let div=document.createElement("div");
+  div.className="item";
+
+  let text=document.createElement("span");
+  text.textContent=task;
+
+  let btn=document.createElement("button");
+  btn.textContent="DELETE";
+  btn.onclick=function(){
+   tasks.splice(i,1);
+   localStorage.setItem("tasks2",JSON.stringify(tasks));
+   showTasks();
+  };
+
+  div.appendChild(text);
+  div.appendChild(btn);
+  list.appendChild(div);
+ });
+}
+
+function addTask(){
+ let input=document.getElementById("task");
+ if(!input.value.trim())return;
+
+ tasks.push(input.value.trim());
+ localStorage.setItem("tasks2",JSON.stringify(tasks));
+ input.value="";
+ showTasks();
+}
+
+let sites=JSON.parse(localStorage.getItem("sites2") || "[]");
+
+function showSites(){
+ let list=document.getElementById("siteList");
+ list.innerHTML="";
+
+ sites.forEach(function(site,i){
+  let div=document.createElement("div");
+  div.className="item";
+
+  let link=document.createElement("a");
+  link.href=site.url;
+  link.textContent=site.name;
+  link.target="_blank";
+  link.style.color="#00ff80";
+
+  let btn=document.createElement("button");
+  btn.textContent="DELETE";
+  btn.onclick=function(){
+   sites.splice(i,1);
+   localStorage.setItem("sites2",JSON.stringify(sites));
+   showSites();
+  };
+
+  div.appendChild(link);
+  div.appendChild(document.createElement("br"));
+  div.appendChild(btn);
+  list.appendChild(div);
+ });
+}
+
+function addSite(){
+ let name=document.getElementById("siteName").value.trim();
+ let url=document.getElementById("siteLink").value.trim();
+
+ if(!name || !url)return;
+
+ if(!/^https?:\/\//i.test(url)){
+  alert("Enter a valid URL starting with https://");
+  return;
+ }
+
+ sites.push({name:name,url:url});
+ localStorage.setItem("sites2",JSON.stringify(sites));
+
+ document.getElementById("siteName").value="";
+ document.getElementById("siteLink").value="";
+ showSites();
+}
+
+showTasks();
+showSites();
+
+  function openAI(){
+    window.open("https://chatgpt.com/", "_blank");
+}
+document.getElementById("myFiles").addEventListener("change", function(){
+
+    let files = this.files;
+    let list = document.getElementById("fileList");
+
+    list.innerHTML = "";
+
+    for(let i = 0; i < files.length; i++){
+
+        let file = files[i];
+
+        let item = document.createElement("div");
+        item.className = "item";
+
+        let name = document.createElement("p");
+        name.textContent = "📄 " + file.name;
+
+        item.appendChild(name);
+
+        let button = document.createElement("button");
+        button.textContent = "OPEN";
+
+        button.onclick = function(){
+
+            let url = URL.createObjectURL(file);
+            window.open(url, "_blank");
+
+        };
+
+        item.appendChild(button);
+        list.appendChild(item);
+    }
+
+});
+</script>
+let subjects = JSON.parse(
+localStorage.getItem("hardikSubjects") || "[]"
+);
+
+function addSubject(){
+
+let name = document.getElementById("subjectName").value.trim();
+
+if(!name) return;
+
+subjects.push(name);
+
+localStorage.setItem(
+"hardikSubjects",
+JSON.stringify(subjects)
+);
+
+document.getElementById("subjectName").value = "";
+
+showSubjects();
+}
+
+function showSubjects(){
+
+let list = document.getElementById("subjectList");
+
+list.innerHTML = "";
+
+subjects.forEach(function(subject,index){
+
+let item = document.createElement("div");
+item.className = "item";
+
+let name = document.createElement("p");
+name.textContent = "📖 " + subject;
+
+let btn = document.createElement("button");
+btn.textContent = "DELETE";
+
+btn.onclick = function(){
+
+subjects.splice(index,1);
+
+localStorage.setItem(
+"hardikSubjects",
+JSON.stringify(subjects)
+);
+
+showSubjects();
+};
+
+item.appendChild(name);
+item.appendChild(btn);
+
+list.appendChild(item);
+
+});
+}
+
+function saveStudyNotes(){
+
+let chapter = document.getElementById("chapterName").value.trim();
+let notes = document.getElementById("studyNotes").value;
+
+if(!chapter || !notes.trim()){
+alert("Enter chapter and notes!");
+return;
+}
+
+let allNotes = JSON.parse(
+localStorage.getItem("hardikStudyNotes") || "[]"
+);
+
+allNotes.push({
+chapter: chapter,
+notes: notes
+});
+
+localStorage.setItem(
+"hardikStudyNotes",
+JSON.stringify(allNotes)
+);
+
+alert("Study Notes Saved!");
+
+document.getElementById("chapterName").value = "";
+document.getElementById("studyNotes").value = "";
+
+showStudyNotes();
+}
+
+function showStudyNotes(){
+
+let allNotes = JSON.parse(
+localStorage.getItem("hardikStudyNotes") || "[]"
+);
+
+let list = document.getElementById("savedNotes");
+
+list.innerHTML = "";
+
+allNotes.forEach(function(note){
+
+let item = document.createElement("div");
+item.className = "item";
+
+let title = document.createElement("h3");
+title.textContent = "📖 " + note.chapter;
+
+let content = document.createElement("p");
+content.textContent = note.notes;
+
+item.appendChild(title);
+item.appendChild(content);
+
+list.appendChild(item);
+
+});
+}
+
+showSubjects();
+showStudyNotes();
+</body>
+</html>
